@@ -3,9 +3,7 @@
 
 The project is to implement conjugate estimators for the following scenarios:
 
-Binomial 
-Gaussian with known variance (i.e. estimate the mean)
-Gaussian with known mean (i.e. estimate the variance)
+Binomial, gaussian with known variance (i.e. estimate the mean), and gaussian with known mean (i.e. estimate the variance)
 
 You should plot the mean squared error both the ML and conjugate prior estimates, all on one plot, with a legend. For each scenario, choose 2-3 different values for the hyper parameters. 
 
