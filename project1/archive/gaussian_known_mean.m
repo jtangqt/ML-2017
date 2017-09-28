@@ -3,29 +3,21 @@
 
 clc; clear all; close all; 
 
-
-N = 1:1:100;
-p = 0.5; 
-noTrials =100; 
-
-X = cell(size(N,2),1); % can just use length(N) for vectors
-for i = 1:size(N,2)
-    for j = 1:noTrials
-        X{i,1} = (rand(1,N(i))<=p)';
-    end
-end
+X = randi([0 1], 100, 100);
+N = 1:1:100; 
+mse = zeros(1, size(N,2)); 
+m = zeros(1, size(N,2)); 
+l = zeros(1, size(N,2)); 
 
 a = [0.1, 1, 2, 8];
 b = [0.1, 1, 3, 4];
 
 mse_cp = zeros(size(a,2), size(N,2)); 
-m = zeros(size(N,2), 1);
-l = zeros(size(N,2), 1);
 
 for i = 1:size(N,2)
-    m_i = sum(X{i, 1}, 1); 
+    m_i = sum(X(1:i, :), 1); 
     mu_ML = m_i/N(i);
-    mse(i) = mean((mu_ML - 0.5).^2, 2); 
+    mse(i) = mean((mu_ML - 0.5).^2); 
     m(i, :) = m_i;
     l(i, :) = N(i) - m_i; 
 end
