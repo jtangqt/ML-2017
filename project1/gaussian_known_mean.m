@@ -19,7 +19,6 @@ a_o = [0.1, 1, 2, 4];
 b_o = sqrt([0.1, 1, 2, 4]);
 
 for i = 1:size(X, 1)
-    mu_ml = sum(X(1,i,:),1)/i;
     var_ml(i, :) = sum((X(1:i, :)-mu).^2, 1)/i;
     mse_ml(i) = mean((var_ml(i,:) - sigma^2).^2, 2);
 end
@@ -56,5 +55,3 @@ prec_vec = 0:0.01:5;
 figure 
 subplot(1,2,1); update_plot_gamma(length(N),N,prec_vec,s,var_ml,a_o,b_o);
 subplot(1,2,2); update_plot_gamma(1,N,prec_vec,s,var_ml,a_o,b_o);
-
-
