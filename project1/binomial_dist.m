@@ -3,7 +3,7 @@
 
 clc; close all; 
 
-X = rand(100); 
+X = binornd(20, 0.5, 100, 100); 
 N = 1:1:100;
 m = zeros(100); 
 l = zeros(100); 
@@ -17,7 +17,7 @@ mse_cp = zeros(size(a,1), 100);
 for i = 1:size(X, 1)
     m(i, :) = sum(X(1:i, :), 1); 
     l(i, :) = i - m(i,:); 
-    mu_ml(i, :) = m(i, :)/i; 
+    mu_ml(i, :) = m(i, :)/i/20; 
     mse_ml(i) = sum((mu_ml(i,:) - 0.5).^2)/100; 
 end
 
@@ -26,7 +26,7 @@ plot(N, mse_ml);
 hold on; 
 
 for i = 1:size(a, 1)
-    mu_cp = (m+a(i))./(m+l+a(i)+b(i)); 
+    mu_cp = (m+a(i))./(m+l+a(i)+b(i))/20; 
     mse_cp(i,:) = sum((mu_cp -0.5).^2, 2)/100; 
     plot(N, mse_cp(i,:)); 
     hold on; 
