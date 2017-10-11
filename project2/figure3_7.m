@@ -1,7 +1,7 @@
 %%Plots Figure 3.7
 
 close all; clc; clear all; 
-N = 100; 
+N = 20; 
 x = 2*rand(1,N)-1;
 a0 = -0.3;
 a1 = 0.5;  
@@ -33,5 +33,5 @@ end
 j = 1;
 update3_7(j, 0, x, y, a, beta, m0, S0, prior, matrix); j = j+1;
 update3_7(j, 1, x, y, a, beta, m0, S0, prior, matrix); j = j+1;
-update3_7(j, 5, x, y, a, beta, m0, S0, prior, matrix); j = j+1; 
-update3_7(j, 100, x, y, a, beta, m0, S0, prior, matrix);
+update3_7(j, 2, x, y, a, beta, m0, S0, prior, matrix); j = j+1; 
+update3_7(j, 20, x, y, a, beta, m0, S0, prior, matrix);
