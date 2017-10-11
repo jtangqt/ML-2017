@@ -1,7 +1,7 @@
 %%Plots Figure 3.7
 
 close all; clc; clear all; 
-N = 20; 
+N = 100; 
 x = 2*rand(1,N)-1;
 a0 = -0.3;
 a1 = 0.5;  
@@ -29,8 +29,9 @@ for i = 1:N
     matrix(2*i-1:2*i,:) = mvnrnd(mN, SN, 6)'; 
     mN_lse(2*i-1:2*i) = pinv(alpha/beta*eye(length(a))+phi(1:i, :)'*phi(1:i, :))*phi(1:i, :)'*y(1:i)';
 end
-other_parameters = 1; 
-update_figure3_7(x, y, 1, a, alpha, beta, 1, other_parameters) 
-    
-figure; 
-scatter(x,y); 
+
+j = 1;
+update3_7(j, 0, x, y, a, beta, m0, S0, prior, matrix); j = j+1;
+update3_7(j, 1, x, y, a, beta, m0, S0, prior, matrix); j = j+1;
+update3_7(j, 5, x, y, a, beta, m0, S0, prior, matrix); j = j+1; 
+update3_7(j, 100, x, y, a, beta, m0, S0, prior, matrix);

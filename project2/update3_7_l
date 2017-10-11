@@ -1,4 +1,4 @@
-function y = update_figure3_7(x, y, n, a, beta, i, m0, S0, phi, other_parameters) 
+function y = update3_7_l(x, y, n, a, beta, i, m0, S0, phi, other_parameters) 
 
 
     n = 1; 
