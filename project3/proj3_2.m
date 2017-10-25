@@ -26,7 +26,7 @@ while j < 1000 && sq_err > 0.1
     tmp_w = w; 
     z = phi*w - R^(-1)*(y - t); 
     w = (phi'*R*phi)^(-1)*phi'*R*z;
-    y = 1./(1+exp(-phi*w)); 
+    y = sigmoid(phi*w); 
     for k = 1:N
         R(k, k) = y(k)*(1-y(k)); 
     end
