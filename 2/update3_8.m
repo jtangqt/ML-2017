@@ -9,7 +9,7 @@ function y = update3_8(i, n, x, y, beta, S0, m0, phi, s)
     
     m_p = phi_t*mN;
     S_p = [];
-    for i = 1:9
+    for i = 1:size(x_t,2)
         S_1 = 1/beta + phi(1, :)*SN*phi(1,:)';
         S_p = [S_p S_1];
     end
@@ -23,13 +23,13 @@ function y = update3_8(i, n, x, y, beta, S0, m0, phi, s)
     plot(x_t, m_p', 'r')
     hold on;
     
-    bot = m_p - sqrt(S_p);
-    top = m_p + sqrt(S_p); 
+    bot = m_p' - sqrt(S_p);
+    top = m_p' + sqrt(S_p); 
     
     color = [1 0.4 0.6];
-    X = [x_t' fliplr(x_t')];
-    Y = [bot' fliplr(top')];
-    p = fill(X, Y, color);
+    X = [x_t'; flipud(x_t')];
+    Y = [bot'; flipud(top')];
+    h = fill(X, Y, color);
     set(h,'EdgeColor','none') % remove edges/borders from fill
     alpha(0.3)
     
