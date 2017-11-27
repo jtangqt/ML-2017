@@ -2,96 +2,89 @@
 %% One Dimensional Case
 close all; clear all; clc;
 
-mu = [-6,0,6];
+mu = [-6 0 9];
 sigma = [1,1,1];
-PItrue = [0.4,0.2,0.4];
-P = 25;
-muk = [-10,2,10];
-sigmak = [1,1,1];
-PIk = [1/4,1/2,1/4];
+pi_true = [0.5,0.1,0.4];
+P = 10000;
+
+mu_k = [-10 6 10];
+sigma_k = [1,1,1];
+pi_k = [1/3,1/3,1/3];
 
 N = 500;
 truth = zeros(3,N);
+x_n = zeros(1, N); 
+
 %Data Generation
-for ii = 1:N
-    poop = rand();
-    if poop <= PItrue(1)
-        xn(ii) = normrnd(mu(1),sqrt(sigma(1)));
-        truth(1,ii) = 1;
-    elseif poop <= (PItrue(1) + PItrue(2))
-        xn(ii) = normrnd(mu(2),sqrt(sigma(2)));
-        truth(2,ii) = 1;
+for i = 1:N
+    tmp = rand();
+    if tmp <= pi_true(1)
+        x_n(i) = normrnd(mu(1),sqrt(sigma(1)));
+        truth(1,i) = 1;
+    elseif tmp <= (pi_true(1) + pi_true(2))
+        x_n(i) = normrnd(mu(2),sqrt(sigma(2)));
+        truth(2,i) = 1;
     else
-        xn(ii) = normrnd(mu(3),sqrt(sigma(3)));
-        truth(3,ii) = 1;
+        x_n(i) = normrnd(mu(3),sqrt(sigma(3)));
+        truth(3,i) = 1;
     end
 end
 
-for jj = 1:3
-    NKtrue(jj) = sum(truth(jj,:));
-end
-
 figure
-histogram(xn,24)
+histogram(x_n,24)
 yyaxis left;
 xlabel('Observation Values')
 ylabel('Frequency of Data in Bin')
 hold on
+
 yl = ylim;
 xl = xlim;
 xplot = linspace(xl(1),xl(2),N);
-totalpdf = zeros(1,N);
-for ii = 1:3
-   totalpdf = totalpdf + PIk(ii)*normpdf(xplot,muk(ii),sqrt(sigmak(ii))); 
-end
+
+totalpdf = pi_k*normpdf(xplot,mu_k',sqrt(sigma_k)'); 
+
 yyaxis right;
 ylabel('Value of Total PDF')
 h1 = plot(xplot,totalpdf,'r');
-totalpdf2 = 0;
-for ii = 1:3
-   totalpdf2 = totalpdf2 + PItrue(ii)*normpdf(xplot,mu(ii),sqrt(sigma(ii))); 
-end
 hold on
-h2 = plot(xplot,totalpdf2,'g');
-legend([h1 h2],'Initial','Actual')
-title('Histogram of Data, Initial PDF, and True PDF')
 
-%I didn't check for convergence, and just ran it for a fixed number
-%of iterations instead.
-for pp = 1:P
-    denominator = zeros(3,N);
-    for jj = 1:3
-        denominator(jj,:) = PIk(jj)*normpdf(xn,muk(jj),sqrt(sigmak(jj)));
-    end
-    for k = 1:3
-        %E step
-        gamma(k,:) = denominator(k,:)./sum(denominator);
-        %M step
-        Nk(k) = sum(gamma(k,:));
-        muk(k) = sum(gamma(k,:).*xn)/Nk(k);
-        PIk(k) = Nk(k)/N;
-        sigmak(k) = sum(gamma(k,:).*((xn - muk(k)).^2))/Nk(k); %For the 1D Case, this formula works
-    end
-    if (pp == 1 || pp == 3 || pp == 10 || pp == 25)
-        figure
-        histogram(xn,24)
-        yyaxis left;
-        xlabel('Observation Values')
-        ylabel('Frequency of Data in Bin')
-        hold on
-        yl = ylim;
-        xl = xlim;
-        xplot = linspace(xl(1),xl(2),N);
-        totalpdf = zeros(1,N);
-        for ii = 1:3
-           totalpdf = totalpdf + PIk(ii)*normpdf(xplot,muk(ii),sqrt(sigmak(ii))); 
+totalpdf2 =  pi_true*normpdf(xplot,mu',sqrt(sigma)'); 
+
+h2 = plot(xplot,totalpdf2,'g');
+title('Histogram of Data, Initial PDF, and True PDF')
+legend([h1 h2],'Initial','Actual')
+hold off
+
+Nk = zeros(1, 3); 
+gamma = zeros(3, N);
+convergence = 0;
+log_l = 0; 
+log_prev = 0; 
+for p = 1:P
+    denominator  = pi_k'.*normpdf(x_n,mu_k',sqrt(sigma_k)');
+    
+    gamma = denominator./sum(denominator);
+    Nk = sum(gamma, 2)';
+    mu_k = (gamma*x_n'./Nk')';
+    pi_k = Nk/N; 
+    sigma_k = (sum(gamma.*(x_n - mu_k').^2, 2)'./Nk);
+    
+    totalpdf = pi_k*normpdf(xplot,mu_k',sqrt(sigma_k)'); 
+    
+    log_l = sum(log(sum(denominator)));  
+    
+    if(abs(log_prev - log_l) <= 0.0001)
+        convergence = 1;
+    end 
+    
+    log_prev = log_l; 
+        
+    if (p == 1 || p == 3 || p == 10 || p == 25 || convergence == 1 || p == P)
+        plotsfor1d(x_n, N, totalpdf, totalpdf2, p)
+        
+        if(convergence == 1)
+            break;
         end
-        yyaxis right;
-        ylabel('Value of Total PDF')
-        title(['Histogram of Data & PDF at Iteration ',num2str(pp)])
-        plot(xplot,totalpdf,'r')
-        hold on
-        plot(xplot,totalpdf2,'g');
-        hold off
+        
     end    
 end
