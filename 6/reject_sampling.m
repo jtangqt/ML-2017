@@ -1,5 +1,5 @@
 %Jasmine Tang Project 6 Part 1
-%% Rejection Sampling
+
 close all; clear all; clc;
 
 mu = [-6 0 9];
