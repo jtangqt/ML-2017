@@ -1,4 +1,4 @@
-%Jasmine Tang Project 6
+%Jasmine Tang Project 6 Part 1
 %% Rejection Sampling
 close all; clear all; clc;
 
@@ -39,16 +39,16 @@ yl = ylim;
 xl = xlim;
 xplot = linspace(xl(1),xl(2),N);
 
-totalpdf = k*pi_k*normpdf(xplot,mu_k,sqrt(sigma_k)); 
-
-yyaxis right;
-ylabel('Value of Total PDF')
+%{
 h1 = plot(xplot,totalpdf,'r');
 hold on
+%}
+yyaxis right;
+ylabel('Value of Total PDF')
 
-totalpdf2 =  pi_true*normpdf(xplot,mu',sqrt(sigma)'); 
+totalpdf2 = pi_true*normpdf(xplot,mu',sqrt(sigma)'); 
 
 h2 = plot(xplot,totalpdf2,'g');
-title('Histogram of Data, p(z), and kq(z)')
-legend([h1 h2],'kq(z)','p(z)')
+title('Histogram of data & p(z)')
+legend(h2,'p(z)')
 hold off
